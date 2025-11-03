@@ -1,35 +1,66 @@
 package ac2_project.example.ac2_ca.entity;
 
+import ac2_project.example.ac2_ca.entity.Professor_RA;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_professor")
 public class Professor {
-        private int id;
-        private String ra;
-        private Instituicao instituicao;
 
-        public Professor(int id, String ra, Instituicao instituicao) {
-            this.id = id;
-            this.ra = ra;
-            this.instituicao = instituicao;
-        }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        public int getId() {
-            return id;
-        }
+    @Embedded
+    private Professor_RA ra;
 
-        public String getRa() {
-            return ra;
-        }
+    @ManyToOne
+    @JoinColumn(name = "instituicao_id")
+    private Instituicao instituicao;
 
-        public Instituicao getInstituicao() {
-            return instituicao;
-        }
-
-        @Override
-        public String toString() {
-            return "Professor{" +
-                    "id=" + id +
-                    ", ra='" + ra + '\'' +
-                    ", instituicao=" + instituicao.getNome() +
-                    '}';
-        }
+    // Construtores
+    public Professor() {
     }
 
+    public Professor(Professor_RA ra, Instituicao instituicao) {
+        this.ra = ra;
+        this.instituicao = instituicao;
+    }
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
+    }
+
+    public Professor_RA getRa() {
+        return ra;
+    }
+
+    public void setRa(Professor_RA ra) {
+        this.ra = ra;
+    }
+
+    public Instituicao getInstituicao() {
+        return instituicao;
+    }
+
+    public void setInstituicao(Instituicao instituicao) {
+        this.instituicao = instituicao;
+    }
+
+    @Override
+    public String toString() {
+        return "Professor{" +
+                "id=" + id +
+                ", ra=" + ra +
+                ", instituicao=" + (instituicao != null ? instituicao.getNome() : "Sem Instituição") +
+                '}';
+    }
+}

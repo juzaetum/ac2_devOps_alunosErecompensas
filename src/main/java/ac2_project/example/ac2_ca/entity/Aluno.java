@@ -46,7 +46,7 @@ public class Aluno {
         this.media = media;
         verificarRecompensa();
     }
-
+    
     public void criarTopico() {
         this.topicosCriados++;
         verificarRecompensa();
