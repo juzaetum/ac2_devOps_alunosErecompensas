@@ -8,8 +8,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class Ac2CaApplicationTests {
 
-	@Test
-	void contextLoads() {
-		// Skip test to avoid context load on Jenkins
-	}
+		@Test
+		void contextLoads() {
+		}
 }
+
+
