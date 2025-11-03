@@ -32,6 +32,10 @@ public class Curso {
         this.ativo = true;
     }
 
+    public Curso(String string, int i) {
+        this.titulo = string;
+    }
+
     public void adicionarAluno(Aluno aluno) {
         this.alunos.add(aluno);
     }

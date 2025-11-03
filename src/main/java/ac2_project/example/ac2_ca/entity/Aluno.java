@@ -23,6 +23,22 @@ public class Aluno {
     @Column(name = "media")
     private float media;
 
+    @Column(name = "nome")
+    private String nome;
+
+    @Column(name = "email")
+    private String email;
+
+    public Aluno() {
+        this.topicosCriados = 0;
+        this.comentariosFeitos = 0;
+        this.cursosExtrasRecebidos = 0;
+        this.curso = "";
+        this.media = 0.0f;
+        this.nome = "";
+        this.email = "";
+    }
+
     public Aluno(int i, String string, Curso curso2, Instituicao inst) {
         this.curso = "";
         this.media = 0.0f;
@@ -35,6 +51,8 @@ public class Aluno {
         this.cursosExtrasRecebidos = 0;
         this.curso = "";
         this.media = 0.0f;
+        this.nome = "";
+        this.email = "";
     }
 
     public Aluno(AlunoRA ra, String curso, float media) {
@@ -47,6 +65,16 @@ public class Aluno {
         verificarRecompensa();
     }
     
+    public Aluno(String nome, String email) {
+        this.nome = nome;
+        this.email = email;
+        this.topicosCriados = 0;
+        this.comentariosFeitos = 0;
+        this.cursosExtrasRecebidos = 0;
+        this.curso = "";
+        this.media = 0.0f;
+    }
+
     public void criarTopico() {
         this.topicosCriados++;
         verificarRecompensa();
@@ -119,5 +147,21 @@ public class Aluno {
 
     public void setCursosExtrasRecebidos(int cursosExtrasRecebidos) {
         this.cursosExtrasRecebidos = cursosExtrasRecebidos;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
