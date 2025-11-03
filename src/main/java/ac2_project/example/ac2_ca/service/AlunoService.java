@@ -39,4 +39,8 @@ public class AlunoService {
     public void deleteAluno(Long id) {
         alunos.removeIf(a -> a.getId() != null && a.getId().equals(id));
     }
+
+    public List<Aluno> listarTodos() {
+        return new ArrayList<>(alunos);
+    }
 }
