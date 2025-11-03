@@ -1,6 +1,5 @@
 package ac2_project.example.ac2_ca.entity;
 
-import ac2_project.example.ac2_ca.entity.Professor_RA;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

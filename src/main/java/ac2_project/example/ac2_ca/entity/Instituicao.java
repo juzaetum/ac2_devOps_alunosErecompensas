@@ -27,7 +27,11 @@ public class Instituicao {
     @JoinColumn(name = "instituicao_id")
     private List<Aluno> alunos = new ArrayList<>();
 
-    public Instituicao(int i, String string, String string2, String string3) {
+    public Instituicao(int numero, String nome, String endereco, String cnpj) {
+        this.nome = nome;
+        this.endereco = endereco;
+        this.cnpj = new InstituicaoCNPJ(cnpj);
+        this.ativa = true;
     }
 
     public Instituicao(String nome, String endereco, InstituicaoCNPJ cnpj) {
