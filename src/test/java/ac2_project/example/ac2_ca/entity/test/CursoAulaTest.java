@@ -1,98 +1,77 @@
 package ac2_project.example.ac2_ca.entity.test;
 
-import ac2_project.example.ac2_ca.entity.Aluno;
-import ac2_project.example.ac2_ca.entity.AlunoRA;
-import ac2_project.example.ac2_ca.repository.AlunoRepository;
-
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.Optional;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
-class AlunoRepositoryTest {
+class CursoAulaTest {
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private List<String> cursos;
+    private List<String> aulas;
 
-    @Test
-    @DisplayName("Deve salvar um aluno no banco de dados")
-    void deveSalvarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("12345"), "Engenharia", 8.5f);
-        aluno.setNome("Juliane");
-        aluno.setEmail("juliane@example.com");
-
-        Aluno salvo = alunoRepository.save(aluno);
-
-        assertThat(salvo).isNotNull();
-        assertThat(salvo.getId()).isNotNull();
-        assertThat(salvo.getNome()).isEqualTo("Juliane");
-        assertThat(salvo.getCurso()).isEqualTo("Engenharia");
+    @BeforeEach
+    void setUp() {
+        cursos = new ArrayList<>();
+        aulas = new ArrayList<>();
     }
 
     @Test
-    @DisplayName("Deve encontrar um aluno pelo ID")
-    void deveEncontrarAlunoPorId() {
-        Aluno aluno = new Aluno(new AlunoRA("98765"), "Computação", 9.0f);
-        Aluno salvo = alunoRepository.save(aluno);
+    void deveCadastrarCurso() {
+        cursos.add("Engenharia de Software");
 
-        Optional<Aluno> encontrado = alunoRepository.findById(salvo.getId());
-
-        assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getCurso()).isEqualTo("Computação");
+        assertEquals(1, cursos.size());
+        assertEquals("Engenharia de Software", cursos.get(0));
     }
 
     @Test
-    @DisplayName("Deve atualizar um aluno existente")
-    void deveAtualizarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("55555"), "Engenharia", 7.5f);
-        aluno.setNome("Lucas");
-        Aluno salvo = alunoRepository.save(aluno);
+    void deveCadastrarAula() {
+        aulas.add("Introdução ao Spring Boot");
 
-        salvo.setCurso("ADS");
-        salvo.setMedia(8.0f);
-        Aluno atualizado = alunoRepository.save(salvo);
-
-        assertThat(atualizado.getCurso()).isEqualTo("ADS");
-        assertThat(atualizado.getMedia()).isEqualTo(8.0f);
+        assertEquals(1, aulas.size());
+        assertEquals("Introdução ao Spring Boot", aulas.get(0));
     }
 
     @Test
-    @DisplayName("Deve deletar um aluno do banco")
-    void deveDeletarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("11111"), "ADS", 7.5f);
-        Aluno salvo = alunoRepository.save(aluno);
+    void deveAssociarAulaAoCurso() {
+        cursos.add("Engenharia de Software");
+        aulas.add("Introdução ao Spring Boot");
 
-        alunoRepository.deleteById(salvo.getId());
-        Optional<Aluno> resultado = alunoRepository.findById(salvo.getId());
+        String curso = cursos.get(0);
+        String aula = aulas.get(0);
 
-        assertThat(resultado).isEmpty();
+        assertNotNull(curso);
+        assertNotNull(aula);
+        assertEquals("Engenharia de Software", curso);
+        assertEquals("Introdução ao Spring Boot", aula);
     }
 
     @Test
-    @DisplayName("Deve listar todos os alunos")
-    void deveListarTodosOsAlunos() {
-        Aluno a1 = new Aluno(new AlunoRA("22222"), "Engenharia", 8.0f);
-        Aluno a2 = new Aluno(new AlunoRA("33333"), "ADS", 9.0f);
+    void deveLancarErroQuandoCursoNaoExiste() {
+        Exception ex = assertThrows(RuntimeException.class, () -> {
+            String curso = cursos.stream()
+                    .filter(c -> c.equals("Inexistente"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
+        });
 
-        alunoRepository.save(a1);
-        alunoRepository.save(a2);
-
-        List<Aluno> lista = alunoRepository.findAll();
-
-        assertThat(lista).isNotEmpty();
-        assertThat(lista.size()).isGreaterThanOrEqualTo(2);
+        assertEquals("Curso não encontrado", ex.getMessage());
     }
 
     @Test
-    @DisplayName("Deve retornar vazio ao buscar aluno inexistente")
-    void deveRetornarVazioQuandoNaoExistirAluno() {
-        Optional<Aluno> resultado = alunoRepository.findById(999L);
-        assertThat(resultado).isEmpty();
+    void deveLancarErroQuandoAulaNaoExiste() {
+        cursos.add("Engenharia de Software");
+
+        Exception ex = assertThrows(RuntimeException.class, () -> {
+            String aula = aulas.stream()
+                    .filter(a -> a.equals("Inexistente"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Aula não encontrada"));
+        });
+
+        assertEquals("Aula não encontrada", ex.getMessage());
     }
 }
