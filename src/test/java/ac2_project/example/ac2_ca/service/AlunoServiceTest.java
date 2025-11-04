@@ -20,7 +20,7 @@ class AlunoServiceTest {
 
     @Test
     void deveSalvarEListarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("12345"));
+        Aluno aluno = new Aluno(new AlunoRA("123456"));
         aluno.setNome("Juliane");
         aluno.setCurso("Engenharia de Computação");
         aluno.setMedia(8.5f);
@@ -34,11 +34,11 @@ class AlunoServiceTest {
 
     @Test
     void deveRetornarAlunoPorId() {
-        Aluno aluno1 = new Aluno(new AlunoRA("111"));
+        Aluno aluno1 = new Aluno(new AlunoRA("111111"));
         aluno1.setNome("João");
         aluno1.setCurso("Engenharia Civil");
 
-        Aluno aluno2 = new Aluno(new AlunoRA("222"));
+        Aluno aluno2 = new Aluno(new AlunoRA("222222"));
         aluno2.setNome("Maria");
         aluno2.setCurso("Engenharia Mecânica");
 
@@ -53,12 +53,12 @@ class AlunoServiceTest {
 
     @Test
     void deveAtualizarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("333"));
+        Aluno aluno = new Aluno(new AlunoRA("333333"));
         aluno.setCurso("Administração");
         aluno.setMedia(6.0f);
         alunoService.saveAluno(aluno);
 
-        Aluno atualizado = new Aluno(new AlunoRA("333"));
+        Aluno atualizado = new Aluno(new AlunoRA("333333"));
         atualizado.setCurso("Engenharia de Software");
         atualizado.setMedia(9.0f);
 
@@ -71,7 +71,7 @@ class AlunoServiceTest {
 
     @Test
     void deveDeletarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("444"));
+        Aluno aluno = new Aluno(new AlunoRA("433444"));
         alunoService.saveAluno(aluno);
 
         assertEquals(1, alunoService.getAllAlunos().size());
@@ -82,9 +82,9 @@ class AlunoServiceTest {
 
     @Test
     void deveListarTodosOsAlunos() {
-        alunoService.saveAluno(new Aluno(new AlunoRA("1")));
-        alunoService.saveAluno(new Aluno(new AlunoRA("2")));
-        alunoService.saveAluno(new Aluno(new AlunoRA("3")));
+        alunoService.saveAluno(new Aluno(new AlunoRA("123456")));
+        alunoService.saveAluno(new Aluno(new AlunoRA("213456")));
+        alunoService.saveAluno(new Aluno(new AlunoRA("353256")));
 
         List<Aluno> lista = alunoService.listarTodos();
         assertEquals(3, lista.size());
