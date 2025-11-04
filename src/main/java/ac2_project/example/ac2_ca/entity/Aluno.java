@@ -1,7 +1,10 @@
 package ac2_project.example.ac2_ca.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "tb_aluno")
 public class Aluno {
@@ -28,16 +31,6 @@ public class Aluno {
 
     @Column(name = "email")
     private String email;
-
-    public Aluno() {
-        this.topicosCriados = 0;
-        this.comentariosFeitos = 0;
-        this.cursosExtrasRecebidos = 0;
-        this.curso = "";
-        this.media = 0.0f;
-        this.nome = "";
-        this.email = "";
-    }
 
     public Aluno(String nomeAluno, Curso curso2) {
         this.curso = curso2.getTitulo();

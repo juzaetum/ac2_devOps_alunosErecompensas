@@ -1,14 +1,13 @@
 package ac2_project.example.ac2_ca.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.*;
 
+@NoArgsConstructor
 @Embeddable
 public class AlunoRA {
 
     private String numero;
-
-    public AlunoRA() {
-    }
 
     public AlunoRA(String numero) {
         if (!numero.matches("\\d{6}")) {
