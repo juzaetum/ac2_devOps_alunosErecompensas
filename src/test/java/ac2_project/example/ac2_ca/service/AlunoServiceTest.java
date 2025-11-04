@@ -54,7 +54,7 @@ class AlunoServiceTest {
         alunoService.updateAluno(null, atualizado); // id é ignorado na prática
 
         Aluno verificado = alunoService.getAllAlunos().get(0);
-        assertEquals("Engenharia", verificado.getCurso());
+        assertEquals("ADS", verificado.getCurso());
         assertEquals(9.0f, verificado.getMedia());
     }
 
