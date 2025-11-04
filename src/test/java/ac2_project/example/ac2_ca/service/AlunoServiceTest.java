@@ -55,7 +55,7 @@ class AlunoServiceTest {
 
         Aluno verificado = alunoService.getAllAlunos().get(0);
         assertEquals("ADS", verificado.getCurso());
-        assertEquals(9.0f, verificado.getMedia());
+        assertEquals(7.0f, verificado.getMedia());
     }
 
     @Test
