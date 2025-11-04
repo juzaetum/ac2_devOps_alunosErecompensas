@@ -22,8 +22,6 @@ public class Curso {
     @CollectionTable(name = "tb_curso_aulas", joinColumns = @JoinColumn(name = "curso_id"))
     private List<CursoAula> aulas = new ArrayList<>();
 
-    public Curso(int numero, String nome, String email, Professor professor, Instituicao lugar) {
-    }
 
     public Curso(String titulo, String descricao, String professor) {
         this.titulo = titulo;

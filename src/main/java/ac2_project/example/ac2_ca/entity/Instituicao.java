@@ -27,7 +27,7 @@ public class Instituicao {
     @JoinColumn(name = "instituicao_id")
     private List<Aluno> alunos = new ArrayList<>();
 
-    public Instituicao(int numero, String nome, String endereco, String cnpj) {
+    public Instituicao(String nome, String endereco, String cnpj) {
         this.nome = nome;
         this.endereco = endereco;
         this.cnpj = new InstituicaoCNPJ(cnpj);

@@ -39,9 +39,10 @@ public class Aluno {
         this.email = "";
     }
 
-    public Aluno(int numero, String name, Curso curso2, Instituicao inst) {
+    public Aluno(String nomeAluno, Curso curso2) {
         this.curso = curso2.getTitulo();
         this.media = 0.0f;
+        this.nome = nomeAluno;
     }
 
     public Aluno(AlunoRA ra) {
