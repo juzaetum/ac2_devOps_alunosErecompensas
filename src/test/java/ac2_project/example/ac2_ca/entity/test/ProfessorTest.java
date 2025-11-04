@@ -19,7 +19,7 @@ class ProfessorTest {
         instituicao = new Instituicao("Fatec Sorocaba", "Av. Eng. Carlos Reinaldo Mendes", cnpj);
 
         // supondo que o Professor_RA valide algo simples como número do RA
-        raValido = new Professor_RA("9912345");
+        raValido = new Professor_RA("991235");
         professor = new Professor(raValido, instituicao);
     }
 
@@ -32,7 +32,7 @@ class ProfessorTest {
 
     @Test
     void devePermitirAlterarRa() {
-        Professor_RA novoRa = new Professor_RA("8854321");
+        Professor_RA novoRa = new Professor_RA("885421");
         professor.setRa(novoRa);
         assertEquals(novoRa, professor.getRa());
     }
