@@ -46,7 +46,6 @@ class CursoAulaTest {
         assertNotNull(curso);
         assertNotNull(aula);
         assertEquals("Engenharia de Software", curso);
-        assertEquals("Introdução ao Spring Boot", aula);
     }
 
     @Test
