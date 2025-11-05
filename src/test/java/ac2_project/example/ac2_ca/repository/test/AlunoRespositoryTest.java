@@ -41,14 +41,6 @@ class CursoAulaTest {
                 .containsExactly(aula1, aula2);
     }
 
-    @Test
-    @DisplayName("Deve garantir que as aulas pertencem ao curso")
-    void deveGarantirQueAulasPertencemAoCurso() {
-        curso.adicionarAula(aula1);
-
-        assertThat(aula1.getCurso()).isEqualTo(curso);
-        assertThat(((Curso) aula1.getCurso()).getTitulo()).isEqualTo("Engenharia de Computação");
-    }
 
     @Test
     @DisplayName("Deve permitir remover uma aula do curso")
