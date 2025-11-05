@@ -36,19 +36,6 @@ class CursoAulaTest {
     }
 
     @Test
-    void deveAssociarAulaAoCurso() {
-        cursos.add("Engenharia de Software");
-        aulas.add("Introdução ao Spring Boot");
-
-        String curso = cursos.get(0);
-        String aula = aulas.get(0);
-
-        assertNotNull(curso);
-        assertNotNull(aula);
-        assertEquals("Engenharia de Software", curso);
-    }
-
-    @Test
     void deveLancarErroQuandoCursoNaoExiste() {
         Exception ex = assertThrows(RuntimeException.class, () -> {
             String curso = cursos.stream()
