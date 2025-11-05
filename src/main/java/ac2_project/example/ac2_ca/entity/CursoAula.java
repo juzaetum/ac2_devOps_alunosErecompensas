@@ -1,6 +1,5 @@
 package ac2_project.example.ac2_ca.entity;
 
-import java.util.function.IntPredicate;
 
 import jakarta.persistence.Embeddable;
 
@@ -11,6 +10,7 @@ public class CursoAula {
     private int duracaoMinutos; 
     private String conteudoResumo;
     private boolean obrigatoria;
+    private Curso curso;
 
     public CursoAula() {
     }
@@ -41,6 +41,14 @@ public class CursoAula {
         return conteudoResumo;
     }
 
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
+    
+    public Curso getCurso() {
+        return curso;
+    }
+
     public boolean isObrigatoria() {
         return obrigatoria;
     }
@@ -65,8 +73,4 @@ public class CursoAula {
         return titulo != null ? titulo.toLowerCase().hashCode() : 0;
     }
 
-    public IntPredicate getCurso() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCurso'");
-    }
 }
