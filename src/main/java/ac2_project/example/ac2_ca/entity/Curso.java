@@ -34,6 +34,10 @@ public class Curso {
         this.titulo = string;
     }
 
+    public Curso() {
+        //TODO Auto-generated constructor stub
+    }
+
     public void adicionarAluno(Aluno aluno) {
         this.alunos.add(aluno);
     }

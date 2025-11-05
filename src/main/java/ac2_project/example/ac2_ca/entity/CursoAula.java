@@ -1,5 +1,7 @@
 package ac2_project.example.ac2_ca.entity;
 
+import java.util.function.IntPredicate;
+
 import jakarta.persistence.Embeddable;
 
 @Embeddable
@@ -61,5 +63,10 @@ public class CursoAula {
     @Override
     public int hashCode() {
         return titulo != null ? titulo.toLowerCase().hashCode() : 0;
+    }
+
+    public IntPredicate getCurso() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCurso'");
     }
 }

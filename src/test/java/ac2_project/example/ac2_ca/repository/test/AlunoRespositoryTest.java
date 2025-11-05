@@ -1,88 +1,100 @@
-/*package ac2_project.example.ac2_ca.repository.test;
+package ac2_project.example.ac2_ca.repository.test;
 
-import ac2_project.example.ac2_ca.entity.Aluno;
-import ac2_project.example.ac2_ca.entity.AlunoRA;
-import ac2_project.example.ac2_ca.repository.AlunoRepository;
+import ac2_project.example.ac2_ca.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class AlunoRepositoryTest {
+class CursoAulaTest {
 
-    @Mock
-    private AlunoRepository alunoRepository;
-
-    private Aluno aluno;
+    private Curso curso;
+    private CursoAula aula1;
+    private CursoAula aula2;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        aluno = new Aluno(new AlunoRA("12345"), "Engenharia", 8.5f);
-        aluno.setNome("Juliane");
-        aluno.setEmail("juliane@example.com");
+        curso = new Curso();
+        curso.setTitulo("Engenharia de Computação");
+
+        aula1 = new CursoAula("Introdução a Microcontroladores", 90, "Conceitos básicos e aplicações práticas.", true);
+        aula2 = new CursoAula("Arquitetura de Computadores", 120, "Funcionamento interno e instruções.", false);
     }
 
     @Test
-    @DisplayName("Deve salvar um aluno corretamente")
-    void deveSalvarAluno() {
-        when(alunoRepository.save(any(Aluno.class))).thenReturn(aluno);
+    @DisplayName("Deve adicionar aulas ao curso corretamente")
+    void deveAdicionarAulasAoCurso() {
+        curso.adicionarAula(aula1);
+        curso.adicionarAula(aula2);
 
-        Aluno salvo = alunoRepository.save(aluno);
+        List<CursoAula> aulas = curso.getAulas();
 
-        assertThat(salvo).isNotNull();
-        assertThat(salvo.getNome()).isEqualTo("Juliane");
-        assertThat(salvo.getCurso()).isEqualTo("Engenharia");
-
-        verify(alunoRepository, times(1)).save(aluno);
+        assertThat(aulas)
+                .isNotEmpty()
+                .hasSize(2)
+                .containsExactly(aula1, aula2);
     }
 
     @Test
-    @DisplayName("Deve encontrar um aluno pelo ID")
-    void deveEncontrarAlunoPorId() {
-        when(alunoRepository.findById(1L)).thenReturn(Optional.of(aluno));
+    @DisplayName("Deve garantir que as aulas pertencem ao curso")
+    void deveGarantirQueAulasPertencemAoCurso() {
+        curso.adicionarAula(aula1);
 
-        Optional<Aluno> encontrado = alunoRepository.findById(1L);
-
-        assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getRa().getValor()).isEqualTo("12345");
-        verify(alunoRepository, times(1)).findById(1L);
+        assertThat(aula1.getCurso()).isEqualTo(curso);
+        assertThat(((Curso) aula1.getCurso()).getTitulo()).isEqualTo("Engenharia de Computação");
     }
 
     @Test
-    @DisplayName("Deve deletar um aluno pelo ID")
-    void deveDeletarAluno() {
-        doNothing().when(alunoRepository).deleteById(1L);
+    @DisplayName("Deve permitir remover uma aula do curso")
+    void deveRemoverAulaDoCurso() {
+        curso.adicionarAula(aula1);
+        curso.adicionarAula(aula2);
 
-        alunoRepository.deleteById(1L);
+        curso.removerAula(aula1);
 
-        verify(alunoRepository, times(1)).deleteById(1L);
+        assertThat(curso.getAulas())
+                .hasSize(1)
+                .containsExactly(aula2);
     }
 
     @Test
-    @DisplayName("Deve listar todos os alunos")
-    void deveListarTodosOsAlunos() {
-        Aluno a1 = new Aluno(new AlunoRA("11111"), "Computação", 9.0f);
-        Aluno a2 = new Aluno(new AlunoRA("22222"), "ADS", 8.0f);
-        List<Aluno> listaMock = new ArrayList<>(List.of(a1, a2));
+    @DisplayName("Deve retornar corretamente o nome e quantidade de aulas do curso")
+    void deveRetornarNomeEQuantidadeDeAulas() {
+        curso.adicionarAula(aula1);
+        curso.adicionarAula(aula2);
 
-        when(alunoRepository.findAll()).thenReturn(listaMock);
+        String resumo = curso.getTitulo() + " - " + curso.getAulas().size() + " aulas";
 
-        var lista = alunoRepository.findAll();
+        assertThat(resumo)
+                .isEqualTo("Engenharia de Computação - 2 aulas");
+    }
 
-        assertThat(lista).isNotEmpty();
-        assertThat(lista).hasSize(2);
-        verify(alunoRepository, times(1)).findAll();
+    @Test
+    @DisplayName("Deve validar getters e setters de Aula")
+    void deveValidarGettersESettersDeAula() {
+        CursoAula aula = new CursoAula("Eletrônica Digital", 80, "Portas lógicas e circuitos combinacionais", true);
+    
+
+        assertThat(aula.getTitulo()).isEqualTo("Eletrônica Digital");
+        assertThat(aula.getConteudoResumo()).contains("Portas lógicas");
+        assertThat(aula.getDuracaoMinutos()).isEqualTo(80);
+    }
+
+    @Test
+    @DisplayName("Deve simular comportamento com Mockito")
+    void deveUsarMockitoParaVerificarChamadaDeMetodo() {
+        Curso mockCurso = mock(Curso.class);
+        when(mockCurso.getTitulo()).thenReturn("Curso Mockado");
+
+        String titulo = mockCurso.getTitulo();
+
+        assertThat(titulo).isEqualTo("Curso Mockado");
+        verify(mockCurso, times(1)).getTitulo();
     }
 }
-*/
