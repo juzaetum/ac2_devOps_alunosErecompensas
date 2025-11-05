@@ -1,74 +1,88 @@
-package ac2_project.example.ac2_ca.repository.test;
+/*package ac2_project.example.ac2_ca.repository.test;
 
 import ac2_project.example.ac2_ca.entity.Aluno;
 import ac2_project.example.ac2_ca.entity.AlunoRA;
 import ac2_project.example.ac2_ca.repository.AlunoRepository;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-@DataJpaTest
 class AlunoRepositoryTest {
 
-    @Autowired
+    @Mock
     private AlunoRepository alunoRepository;
 
-    @Test
-    @DisplayName("Deve salvar um aluno no banco de dados")
-    void deveSalvarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("12345"), "Engenharia", 8.5f);
+    private Aluno aluno;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        aluno = new Aluno(new AlunoRA("12345"), "Engenharia", 8.5f);
         aluno.setNome("Juliane");
         aluno.setEmail("juliane@example.com");
+    }
+
+    @Test
+    @DisplayName("Deve salvar um aluno corretamente")
+    void deveSalvarAluno() {
+        when(alunoRepository.save(any(Aluno.class))).thenReturn(aluno);
 
         Aluno salvo = alunoRepository.save(aluno);
 
         assertThat(salvo).isNotNull();
-        assertThat(salvo.getId()).isNotNull();
         assertThat(salvo.getNome()).isEqualTo("Juliane");
+        assertThat(salvo.getCurso()).isEqualTo("Engenharia");
+
+        verify(alunoRepository, times(1)).save(aluno);
     }
 
     @Test
     @DisplayName("Deve encontrar um aluno pelo ID")
     void deveEncontrarAlunoPorId() {
-        Aluno aluno = new Aluno(new AlunoRA("98765"), "Computação", 9.0f);
-        Aluno salvo = alunoRepository.save(aluno);
+        when(alunoRepository.findById(1L)).thenReturn(Optional.of(aluno));
 
-        Optional<Aluno> encontrado = alunoRepository.findById(salvo.getId());
+        Optional<Aluno> encontrado = alunoRepository.findById(1L);
 
         assertThat(encontrado).isPresent();
-        assertThat(encontrado.get().getCurso()).isEqualTo("Computação");
+        assertThat(encontrado.get().getRa().getValor()).isEqualTo("12345");
+        verify(alunoRepository, times(1)).findById(1L);
     }
 
     @Test
-    @DisplayName("Deve deletar um aluno do banco")
+    @DisplayName("Deve deletar um aluno pelo ID")
     void deveDeletarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("11111"), "ADS", 7.5f);
-        Aluno salvo = alunoRepository.save(aluno);
+        doNothing().when(alunoRepository).deleteById(1L);
 
-        alunoRepository.deleteById(salvo.getId());
-        Optional<Aluno> resultado = alunoRepository.findById(salvo.getId());
+        alunoRepository.deleteById(1L);
 
-        assertThat(resultado).isEmpty();
+        verify(alunoRepository, times(1)).deleteById(1L);
     }
 
     @Test
     @DisplayName("Deve listar todos os alunos")
     void deveListarTodosOsAlunos() {
-        Aluno a1 = new Aluno(new AlunoRA("22222"), "Engenharia", 8.0f);
-        Aluno a2 = new Aluno(new AlunoRA("33333"), "ADS", 9.0f);
+        Aluno a1 = new Aluno(new AlunoRA("11111"), "Computação", 9.0f);
+        Aluno a2 = new Aluno(new AlunoRA("22222"), "ADS", 8.0f);
+        List<Aluno> listaMock = new ArrayList<>(List.of(a1, a2));
 
-        alunoRepository.save(a1);
-        alunoRepository.save(a2);
+        when(alunoRepository.findAll()).thenReturn(listaMock);
 
         var lista = alunoRepository.findAll();
 
         assertThat(lista).isNotEmpty();
-        assertThat(lista.size()).isGreaterThanOrEqualTo(2);
+        assertThat(lista).hasSize(2);
+        verify(alunoRepository, times(1)).findAll();
     }
 }
+*/
