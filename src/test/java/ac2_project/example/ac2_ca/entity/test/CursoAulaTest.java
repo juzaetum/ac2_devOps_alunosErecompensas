@@ -1,63 +1,88 @@
 package ac2_project.example.ac2_ca.entity.test;
 
+import ac2_project.example.ac2_ca.entity.Curso;
+import ac2_project.example.ac2_ca.entity.CursoAula;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CursoAulaTest {
 
-    private List<String> cursos;
-    private List<String> aulas;
+    private CursoAula aula;
+    private Curso cursoMock;
 
     @BeforeEach
     void setUp() {
-        cursos = new ArrayList<>();
-        aulas = new ArrayList<>();
+        cursoMock = new Curso(); // pode ser um mock simples, sem dependências
+        aula = new CursoAula("Introdução ao Spring Boot", 90, "Fundamentos do framework Spring", true);
+        aula.setCurso(cursoMock);
     }
 
     @Test
-    void deveCadastrarCurso() {
-        cursos.add("Engenharia de Software");
-
-        assertEquals(1, cursos.size());
-        assertEquals("Engenharia de Software", cursos.get(0));
+    void deveCriarAulaComDadosValidos() {
+        assertEquals("Introdução ao Spring Boot", aula.getTitulo());
+        assertEquals(90, aula.getDuracaoMinutos());
+        assertEquals("Fundamentos do framework Spring", aula.getConteudoResumo());
+        assertTrue(aula.isObrigatoria());
+        assertEquals(cursoMock, aula.getCurso());
     }
 
     @Test
-    void deveCadastrarAula() {
-        aulas.add("Introdução ao Spring Boot");
+    void deveLancarErroQuandoTituloForNuloOuVazio() {
+        Exception ex1 = assertThrows(IllegalArgumentException.class, () -> new CursoAula(null, 60, "Resumo", true));
+        assertEquals("O título da aula não pode estar vazio.", ex1.getMessage());
 
-        assertEquals(1, aulas.size());
-        assertEquals("Introdução ao Spring Boot", aulas.get(0));
+        Exception ex2 = assertThrows(IllegalArgumentException.class, () -> new CursoAula("   ", 60, "Resumo", true));
+        assertEquals("O título da aula não pode estar vazio.", ex2.getMessage());
     }
 
     @Test
-    void deveLancarErroQuandoCursoNaoExiste() {
-        Exception ex = assertThrows(RuntimeException.class, () -> {
-            String curso = cursos.stream()
-                    .filter(c -> c.equals("Inexistente"))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Curso não encontrado"));
-        });
-
-        assertEquals("Curso não encontrado", ex.getMessage());
+    void deveLancarErroQuandoDuracaoNaoForPositiva() {
+        Exception ex = assertThrows(IllegalArgumentException.class,
+                () -> new CursoAula("Java Básico", 0, "Resumo", false));
+        assertEquals("A duração da aula deve ser positiva.", ex.getMessage());
     }
 
     @Test
-    void deveLancarErroQuandoAulaNaoExiste() {
-        cursos.add("Engenharia de Software");
+    void devePermitirDefinirCurso() {
+        Curso outroCurso = new Curso();
+        aula.setCurso(outroCurso);
+        assertEquals(outroCurso, aula.getCurso());
+    }
 
-        Exception ex = assertThrows(RuntimeException.class, () -> {
-            String aula = aulas.stream()
-                    .filter(a -> a.equals("Inexistente"))
-                    .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Aula não encontrada"));
-        });
+    @Test
+    void deveGerarToStringCorretamente() {
+        String esperado = "Introdução ao Spring Boot (90 min)";
+        assertEquals(esperado, aula.toString());
+    }
 
-        assertEquals("Aula não encontrada", ex.getMessage());
+    @Test
+    void deveCompararIguaisComMesmoTituloIgnorandoCase() {
+        CursoAula outra = new CursoAula("introdução ao spring boot", 120, "Outro resumo", false);
+        assertEquals(aula, outra);
+        assertEquals(aula.hashCode(), outra.hashCode());
+    }
+
+    @Test
+    void naoDeveSerIgualAObjetoDeOutroTipoOuTituloDiferente() {
+        CursoAula diferente = new CursoAula("Spring Avançado", 90, "Outro conteúdo", true);
+        assertNotEquals(aula, diferente);
+        assertNotEquals(aula, null);
+        assertNotEquals(aula, "string qualquer");
+    }
+
+    @Test
+    void deveGerarHashCodeZeroQuandoTituloForNulo() {
+        CursoAula semTitulo = new CursoAula();
+        assertEquals(0, semTitulo.hashCode());
+    }
+
+    @Test
+    void construtorVazioNaoDeveLancarErro() {
+        CursoAula vazio = new CursoAula();
+        assertNull(vazio.getTitulo());
+        assertEquals(0, vazio.getDuracaoMinutos());
+        assertNull(vazio.getConteudoResumo());
     }
 }
