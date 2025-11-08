@@ -30,12 +30,16 @@ public class Curso {
         this.ativo = true;
     }
 
-    public Curso(String string, int i) {
+    public Curso(String string, int RA_curso) {
         this.titulo = string;
+        this.id = (long) RA_curso;
     }
 
     public Curso() {
-        //TODO Auto-generated constructor stub
+        this.titulo = "";
+        this.descricao = "";
+        this.professor = "";
+        this.ativo = true;
     }
 
     public void adicionarAluno(Aluno aluno) {

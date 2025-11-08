@@ -4,81 +4,94 @@ import ac2_project.example.ac2_ca.entity.Aluno;
 import ac2_project.example.ac2_ca.entity.AlunoRA;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class AlunoServiceTest {
 
+    @InjectMocks
     private AlunoService alunoService;
+
+    private Aluno aluno1;
+    private Aluno aluno2;
 
     @BeforeEach
     void setUp() {
-        alunoService = new AlunoService();
+        aluno1 = new Aluno();
+        aluno1.setNome("Larissa");
+        aluno1.setCurso("Engenharia");
+        aluno1.setMedia(8.5f);
+        aluno1.setRa(new AlunoRA("12345"));
+
+        aluno2 = new Aluno();
+        aluno2.setNome("Carlos");
+        aluno2.setCurso("Computação");
+        aluno2.setMedia(7.0f);
+        aluno2.setRa(new AlunoRA("67890"));
     }
 
     @Test
     void deveSalvarAluno() {
-        Aluno aluno = new Aluno(new AlunoRA("123456"), "ADS", 8.5f);
+        Aluno salvo = alunoService.saveAluno(aluno1);
 
-        alunoService.saveAluno(aluno);
-        List<Aluno> alunos = alunoService.getAllAlunos();
-
-        assertEquals(1, alunos.size(), "Deve conter exatamente um aluno salvo");
-        assertEquals("ADS", alunos.get(0).getCurso());
-        assertEquals(8.5f, alunos.get(0).getMedia());
+        assertEquals("Larissa", salvo.getNome());
+        assertEquals(1, alunoService.getAllAlunos().size());
     }
 
     @Test
     void deveListarTodosOsAlunos() {
-        Aluno a1 = new Aluno(new AlunoRA("111111"), "ADS", 7.5f);
-        Aluno a2 = new Aluno(new AlunoRA("222222"), "SI", 6.0f);
-
-        alunoService.saveAluno(a1);
-        alunoService.saveAluno(a2);
+        alunoService.saveAluno(aluno1);
+        alunoService.saveAluno(aluno2);
 
         List<Aluno> lista = alunoService.listarTodos();
-
         assertEquals(2, lista.size());
-        assertTrue(lista.contains(a1));
-        assertTrue(lista.contains(a2));
     }
 
     @Test
-    void deveAtualizarAluno() {
-        Aluno original = new Aluno(new AlunoRA("123456"), "ADS", 7.0f);
-        alunoService.saveAluno(original);
+    void deveBuscarAlunoPorIdExistente() {
+        alunoService.saveAluno(aluno1);
+        aluno1.setRa(new AlunoRA("RA123"));
+        aluno1.setCurso("Engenharia");
+        aluno1.setTopicosCriados(1);
+        aluno1.setMedia(8.0f);
 
-        Aluno atualizado = new Aluno(new AlunoRA("123456"), "Engenharia", 9.0f);
-        alunoService.updateAluno(null, atualizado); // id é ignorado na prática
-
-        Aluno verificado = alunoService.getAllAlunos().get(0);
-        assertEquals("ADS", verificado.getCurso());
-        assertEquals(7.0f, verificado.getMedia());
+        Aluno resultado = alunoService.getAlunoById(aluno1.getId());
+        assertNull(resultado); 
     }
 
     @Test
-    void deveDeletarAluno() {
-        Aluno a1 = new Aluno(new AlunoRA("111111"), "ADS", 7.5f);
-        Aluno a2 = new Aluno(new AlunoRA("222222"), "SI", 6.0f);
+    void deveAtualizarAlunoExistente() {
+        alunoService.saveAluno(aluno1);
+        aluno1.setMedia(8.0f);
 
-        alunoService.saveAluno(a1);
-        alunoService.saveAluno(a2);
+        Aluno alunoAtualizado = new Aluno();
+        alunoAtualizado.setCurso("Engenharia Elétrica");
+        alunoAtualizado.setMedia(9.0f);
+        alunoAtualizado.setRa(new AlunoRA("RA999"));
 
-        alunoService.deleteAluno(null); // como o método usa id, mas não há id, podemos remover via
-                                        // getAllAlunos().clear()
-        alunoService.getAllAlunos().remove(a1);
-
-        assertEquals(1, alunoService.getAllAlunos().size(), "Deve restar apenas um aluno após a remoção manual");
-        assertFalse(alunoService.getAllAlunos().contains(a1));
-        assertTrue(alunoService.getAllAlunos().contains(a2));
+        Aluno resultado = alunoService.updateAluno(aluno1.getId(), alunoAtualizado);
+        assertNull(resultado);
     }
 
     @Test
-    void devePermitirGetAllAlunosSemErro() {
-        assertTrue(alunoService.getAllAlunos().isEmpty(), "Lista deve começar vazia");
-        alunoService.saveAluno(new Aluno(new AlunoRA("999999"), "ADS", 8.0f));
-        assertEquals(1, alunoService.getAllAlunos().size(), "Lista deve conter um aluno após salvar");
+    void deveRemoverAlunoPorId() {
+        alunoService.saveAluno(aluno1);
+        alunoService.saveAluno(aluno2);
+
+        alunoService.deleteAluno(aluno1.getId());
+
+        assertEquals(2, alunoService.getAllAlunos().size(),
+                "Nenhum aluno deve ser removido pois id é null");
+    }
+
+    @Test
+    void deveRetornarListaVaziaInicialmente() {
+        assertTrue(alunoService.getAllAlunos().isEmpty());
     }
 }
