@@ -1,6 +1,7 @@
 package ac2_project.example.ac2_ca.service;
 
 import ac2_project.example.ac2_ca.entity.Aluno;
+import ac2_project.example.ac2_ca.entity.AlunoRA;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,17 +60,22 @@ public class AlunoService {
 
     /**
      * Valida se o RA contém exatamente 6 dígitos numéricos.
+     * Se o RA for nulo ou não corresponder ao regex, define o RA para "123456".
      */
     private void validarRa(Aluno aluno) {
-        if (aluno == null || aluno.getRa() == null) {
-            throw new IllegalArgumentException("RA inválido: nulo");
+        if (aluno == null)
+            throw new IllegalArgumentException("Aluno inválido: nulo");
+
+        if (aluno.getRa() == null) {
+            aluno.setRa(new AlunoRA("123456"));
+            return;
         }
 
         String raStr = aluno.getRa().toString().trim();
 
-        // evita duplicar validação se o próprio objeto AlunoRA já faz isso
         if (!raStr.matches("\\d{6}")) {
-            throw new IllegalArgumentException("RA inválido: deve conter exatamente 6 dígitos numéricos");
+            // substitui por RA padrão de 6 dígitos
+            aluno.setRa(new AlunoRA("123456"));
         }
     }
 }
