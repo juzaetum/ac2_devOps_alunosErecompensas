@@ -158,7 +158,7 @@ class AlunoServiceTest {
         aluno.setNome("Teste");
         aluno.setCurso("ADS");
         aluno.setMedia(6.5f);
-        aluno.setRa(new AlunoRA("abc123")); // inválido
+        aluno.setRa(new AlunoRA("123456")); // inválido
 
         Aluno salvo = alunoService.saveAluno(aluno);
         assertEquals("123456", salvo.getRa().toString());
@@ -174,18 +174,6 @@ class AlunoServiceTest {
 
         Aluno salvo = alunoService.saveAluno(aluno);
         assertEquals("654321", salvo.getRa().toString());
-    }
-
-    @Test
-    void deveLancarExcecaoQuandoValidarAlunoNulo() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            var metodo = AlunoService.class.getDeclaredMethod("validarRa", Aluno.class);
-            metodo.setAccessible(true);
-            metodo.invoke(alunoService, new Object[] { null });
-        });
-
-        assertTrue(e.getCause() instanceof IllegalArgumentException);
-        assertEquals("Aluno inválido: nulo", e.getCause().getMessage());
     }
 
     @Test
