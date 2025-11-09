@@ -13,7 +13,6 @@ public class Aluno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private int topicosCriados;
     private int comentariosFeitos;
     private int cursosExtrasRecebidos;
@@ -21,9 +20,8 @@ public class Aluno {
     @Embedded
     private AlunoRA ra;
 
-    @ManyToOne
-    @JoinColumn(name = "curso_id")
-    private Curso curso;
+    @Column(name = "curso")
+    private String curso;
 
     @Column(name = "media")
     private float media;
@@ -35,7 +33,7 @@ public class Aluno {
     private String email;
 
     public Aluno(String nomeAluno, Curso curso2) {
-        this.curso = curso2;
+        this.curso = curso2.getTitulo();
         this.media = 0.0f;
         this.nome = nomeAluno;
     }
@@ -45,6 +43,7 @@ public class Aluno {
         this.topicosCriados = 0;
         this.comentariosFeitos = 0;
         this.cursosExtrasRecebidos = 0;
+        this.curso = "";
         this.media = 0.0f;
         this.nome = "";
         this.email = "";
@@ -55,6 +54,7 @@ public class Aluno {
         this.topicosCriados = 0;
         this.comentariosFeitos = 0;
         this.cursosExtrasRecebidos = 0;
+        this.curso = curso;
         this.media = media;
         verificarRecompensa();
     }
@@ -65,6 +65,7 @@ public class Aluno {
         this.topicosCriados = 0;
         this.comentariosFeitos = 0;
         this.cursosExtrasRecebidos = 0;
+        this.curso = "";
         this.media = 0.0f;
     }
 
@@ -101,11 +102,11 @@ public class Aluno {
         this.ra = ra;
     }
 
-    public Curso getCurso() {
+    public String getCurso() {
         return curso;
     }
 
-    public void setCurso(Curso curso) {
+    public void setCurso(String curso) {
         this.curso = curso;
     }
 

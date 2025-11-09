@@ -2,8 +2,6 @@ package ac2_project.example.ac2_ca.service;
 
 import ac2_project.example.ac2_ca.entity.Aluno;
 import ac2_project.example.ac2_ca.entity.AlunoRA;
-import ac2_project.example.ac2_ca.entity.Curso;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,13 +25,13 @@ class AlunoServiceTest {
     void setUp() {
         aluno1 = new Aluno();
         aluno1.setNome("Larissa");
-        aluno1.setCurso(new Curso("Engenharia", 1));
+        aluno1.setCurso("Engenharia");
         aluno1.setMedia(8.5f);
         aluno1.setRa(new AlunoRA("123456"));
 
         aluno2 = new Aluno();
         aluno2.setNome("Carlos");
-        aluno2.setCurso(new Curso("Computação", 1));
+        aluno2.setCurso("Computação");
         aluno2.setMedia(7.0f);
         aluno2.setRa(new AlunoRA("678690"));
     }
@@ -81,7 +79,7 @@ class AlunoServiceTest {
         alunoService.saveAluno(aluno1);
 
         Aluno atualizado = new Aluno();
-        atualizado.setCurso(new Curso("Elétrica", 1));
+        atualizado.setCurso("Elétrica");
         atualizado.setMedia(9.0f);
         atualizado.setRa(new AlunoRA("999999"));
 
@@ -93,7 +91,7 @@ class AlunoServiceTest {
     void deveRetornarNullAoAtualizarComIdNulo() {
         alunoService.saveAluno(aluno1);
         Aluno atualizado = new Aluno();
-        atualizado.setCurso(new Curso("Civil", 1));
+        atualizado.setCurso("Civil");
 
         Aluno resultado = alunoService.updateAluno(null, atualizado);
         assertNull(resultado);
@@ -110,7 +108,7 @@ class AlunoServiceTest {
     void deveRetornarNullAoAtualizarAlunoInexistente() {
         alunoService.saveAluno(aluno1);
         Aluno novo = new Aluno();
-        novo.setCurso(new Curso("Computação", 1));
+        novo.setCurso("Computação");
         novo.setRa(new AlunoRA("111111"));
         novo.setMedia(7.5f);
 
@@ -145,7 +143,7 @@ class AlunoServiceTest {
     void deveDefinirRaPadraoQuandoRaForNulo() {
         Aluno aluno = new Aluno();
         aluno.setNome("Sem RA");
-        aluno.setCurso(new Curso("Computação", 1));
+        aluno.setCurso("Computação");
         aluno.setMedia(5.0f);
         aluno.setRa(null);
 
@@ -158,7 +156,7 @@ class AlunoServiceTest {
     void deveSubstituirRaInvalidoPorPadraoDuranteValidacao() {
         Aluno aluno = new Aluno();
         aluno.setNome("Teste");
-        aluno.setCurso(new Curso("ADS", 1));
+        aluno.setCurso("ADS");
         aluno.setMedia(6.5f);
         aluno.setRa(new AlunoRA("123456")); // inválido
 
@@ -170,7 +168,7 @@ class AlunoServiceTest {
     void deveManterRaValidoDuranteValidacao() {
         Aluno aluno = new Aluno();
         aluno.setNome("Bruno");
-        aluno.setCurso(new Curso("Sistemas", 1));
+        aluno.setCurso("Sistemas");
         aluno.setMedia(9.0f);
         aluno.setRa(new AlunoRA("654321"));
 
@@ -197,7 +195,7 @@ class AlunoServiceTest {
         field.set(aluno1, 1L);
 
         Aluno atualizado = new Aluno();
-        atualizado.setCurso(new Curso("Engenharia Civil", 1));
+        atualizado.setCurso("Engenharia Civil");
         atualizado.setMedia(9.2f);
         atualizado.setRa(new AlunoRA("999999"));
 
@@ -219,7 +217,7 @@ class AlunoServiceTest {
         field.set(aluno1, 1L);
 
         Aluno atualizado = new Aluno();
-        atualizado.setCurso(new Curso("Engenharia Mecânica", 1));
+        atualizado.setCurso("Engenharia Mecânica");
         atualizado.setMedia(8.7f);
         atualizado.setRa(null); // força uso de RA padrão
 

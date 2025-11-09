@@ -95,7 +95,7 @@ public class AlunoTest {
     @Test
     void testSettersEGettersBasicos() {
         Aluno aluno = new Aluno(new AlunoRA("999999"));
-        aluno.setCurso(new Curso("Engenharia da Computação", 1));
+        aluno.setCurso("Engenharia da Computação");
         aluno.setTopicosCriados(3);
         aluno.setComentariosFeitos(2);
         aluno.setCursosExtrasRecebidos(1);
