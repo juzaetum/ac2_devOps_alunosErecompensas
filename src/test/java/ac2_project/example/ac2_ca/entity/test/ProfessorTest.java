@@ -69,6 +69,53 @@ class ProfessorTest {
 
         assertEquals(raValido, professor.getRa());
         assertEquals(instituicao, professor.getInstituicao());
-        assertNull(professor.getId()); // ainda não persistido
+        assertNull(professor.getId()); 
     }
+    
+    @Test
+    void construtorPadraoDeveCriarProfessorComCamposNulos() {
+        Professor novoProfessor = new Professor();
+        assertNull(novoProfessor.getId());
+        assertNull(novoProfessor.getRa());
+        assertNull(novoProfessor.getInstituicao());
+    }
+
+    @Test
+    void toStringDeveConterRaQuandoNaoNulo() {
+        String resultado = professor.toString();
+        assertTrue(resultado.contains(raValido.toString()),
+                "toString deve conter o RA quando não for nulo");
+    }
+
+    @Test
+    void toStringNaoDeveLancarExcecaoQuandoTudoForNulo() {
+        Professor professorNulo = new Professor();
+        assertDoesNotThrow(() -> professorNulo.toString());
+        String resultado = professorNulo.toString();
+        assertTrue(resultado.contains("Professor{"));
+    }
+
+    @Test
+    void devePermitirDefinirInstituicaoComoNula() {
+        professor.setInstituicao(null);
+        assertNull(professor.getInstituicao());
+        String resultado = professor.toString();
+        assertTrue(resultado.contains("Sem Instituição"));
+    }
+
+    @Test
+    void deveCompararReferenciasDeInstituicaoCorretamente() {
+        Instituicao mesma = professor.getInstituicao();
+        professor.setInstituicao(mesma);
+        assertSame(mesma, professor.getInstituicao());
+    }
+
+    @Test
+    void devePermitirAlterarRaParaNulo() {
+        professor.setRa(null);
+        assertNull(professor.getRa());
+        String resultado = professor.toString();
+        assertTrue(resultado.contains("Professor"));
+    }
+
 }
