@@ -11,11 +11,15 @@ services:
 
   api:
     image: juzaetum/ac2_devops_alunoserecompensas:latest
-    networks:
-      - default  # Certifique-se de que está usando a rede adequada
+    depends_on:
+      - database
     environment: 
       DB_HOST: database
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: sapi
     ports:
       - "8686:8080"
+
 volumes:
   db-volume:
