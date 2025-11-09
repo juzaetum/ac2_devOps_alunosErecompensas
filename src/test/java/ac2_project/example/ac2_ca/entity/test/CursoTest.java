@@ -72,4 +72,62 @@ public class CursoTest {
         assertEquals("Conceitos avançados de redes", curso.getDescricao());
         assertEquals("Prof. Maria", curso.getProfessor());
     }
+    
+    @Test
+    void deveCriarCursoComConstrutorPadrao() {
+        Curso curso = new Curso();
+        assertEquals("", curso.getTitulo());
+        assertEquals("", curso.getDescricao());
+        assertEquals("", curso.getProfessor());
+        assertTrue(curso.isAtivo());
+        assertNotNull(curso.getAulas());
+        assertNotNull(curso.getAlunos());
+    }
+
+    @Test
+    void deveCriarCursoComTituloEIdPersonalizado() {
+        Curso curso = new Curso("Cálculo I", 123);
+        assertEquals("Cálculo I", curso.getTitulo());
+        assertEquals(123L, curso.getId());
+    }
+
+    @Test
+    void devePermitirDefinirAulasViaSetter() {
+        Curso curso = new Curso("Matemática", "Álgebra Linear", "Prof. Luiz");
+        CursoAula aula = new CursoAula("Vetores", 40, "Introdução a vetores", true);
+
+        curso.setAulas(List.of(aula));
+
+        assertEquals(1, curso.getAulas().size());
+        assertEquals("Vetores", curso.getAulas().get(0).getTitulo());
+    }
+
+    @Test
+    void devePermitirAlterarEstadoAtivoComSetter() {
+        Curso curso = new Curso("Eletrônica", "Circuitos", "Prof. Paulo");
+        curso.setAtivo(false);
+        assertFalse(curso.isAtivo());
+        curso.setAtivo(true);
+        assertTrue(curso.isAtivo());
+    }
+
+    @Test
+    void devePermitirObterListaDeAulasMesmoSemAdicionar() {
+        Curso curso = new Curso("Química", "Estrutura Atômica", "Prof. Alice");
+        assertNotNull(curso.getAulas());
+        assertTrue(curso.getAulas().isEmpty());
+    }
+
+    @Test
+    void deveManterListaDeAlunosIndependenteEntreCursos() {
+        Curso curso1 = new Curso("Física", "Mecânica", "Prof. Carlos");
+        Curso curso2 = new Curso("Física II", "Eletromagnetismo", "Prof. Diego");
+
+        Aluno aluno = new Aluno(new AlunoRA("112233"));
+        curso1.adicionarAluno(aluno);
+
+        assertEquals(1, curso1.getAlunos().size());
+        assertEquals(0, curso2.getAlunos().size());
+    }
+
 }
