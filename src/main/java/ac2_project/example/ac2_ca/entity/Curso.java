@@ -16,6 +16,7 @@ public class Curso {
     private String descricao;
     private String professor;
     private boolean ativo;
+    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Aluno> alunos = new ArrayList<>();
 
     @ElementCollection
