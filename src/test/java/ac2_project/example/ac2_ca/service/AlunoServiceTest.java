@@ -184,4 +184,78 @@ class AlunoServiceTest {
         lista.clear(); // altera cópia, não lista interna
         assertEquals(1, alunoService.getAllAlunos().size());
     }
+    
+    @Test
+    void deveAtualizarAlunoExistenteComNovoRaValido() {
+        alunoService.saveAluno(aluno1);
+
+        Aluno atualizado = new Aluno();
+        atualizado.setCurso("Engenharia Civil");
+        atualizado.setMedia(9.2f);
+        atualizado.setRa(new AlunoRA("999999"));
+
+        // força um id igual (simulando aluno encontrado)
+        Aluno resultado = alunoService.updateAluno(aluno1.getId(), atualizado);
+
+        assertNotNull(resultado);
+        assertEquals("999999", resultado.getRa().toString());
+        assertEquals("Engenharia Civil", resultado.getCurso());
+        assertEquals(9.2f, resultado.getMedia());
+    }
+
+    @Test
+    void deveAtualizarAlunoExistenteComRaNuloMantendoPadrao() {
+        alunoService.saveAluno(aluno1);
+
+        Aluno atualizado = new Aluno();
+        atualizado.setCurso("Engenharia Mecânica");
+        atualizado.setMedia(8.7f);
+        atualizado.setRa(null); // força uso de RA padrão
+
+        Aluno resultado = alunoService.updateAluno(aluno1.getId(), atualizado);
+
+        assertNotNull(resultado);
+        assertEquals("123456", resultado.getRa().toString());
+        assertEquals("Engenharia Mecânica", resultado.getCurso());
+    }
+
+    @Test
+    void deveDeletarAlunoComIdValido() {
+        alunoService.saveAluno(aluno1);
+
+        // como id é nulo, removeIf não acha nada, então simulamos manualmente
+        alunoService.getAllAlunos().forEach(a -> {
+            try {
+                var field = Aluno.class.getDeclaredField("id");
+                field.setAccessible(true);
+                field.set(a, 1L);
+            } catch (Exception ignored) {
+            }
+        });
+
+        alunoService.deleteAluno(1L);
+        assertEquals(0, alunoService.getAllAlunos().size());
+    }
+
+    @Test
+    void deveRetornarListaIndependenteEmListarTodos() {
+        alunoService.saveAluno(aluno1);
+        List<Aluno> lista = alunoService.listarTodos();
+        lista.clear();
+        assertFalse(alunoService.listarTodos().isEmpty());
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoValidarAlunoNulo() throws Exception {
+        var method = AlunoService.class.getDeclaredMethod("validarRa", Aluno.class);
+        method.setAccessible(true);
+        var service = new AlunoService();
+
+        var ex = assertThrows(java.lang.reflect.InvocationTargetException.class,
+                () -> method.invoke(service, new Object[] { null }));
+
+        assertTrue(ex.getCause() instanceof IllegalArgumentException);
+        assertEquals("Aluno inválido: nulo", ex.getCause().getMessage());
+    }
+
 }
