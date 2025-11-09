@@ -10,12 +10,15 @@ services:
       - db-volume:/var/lib/postgresql/data
 
   api:
-    image: andprof/ac2_ca:latest
-    networks:
-      - default  # Certifique-se de que está usando a rede adequada
+    image: juzaetum/ac2_devOps_alunosErecompensas:latest
+    depends_on:
+      - database
     environment:
       DB_HOST: database
     ports:
       - "8585:8080"
+    networks:
+      - default
+
 volumes:
   db-volume:
