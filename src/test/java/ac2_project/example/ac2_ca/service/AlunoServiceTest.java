@@ -27,13 +27,13 @@ class AlunoServiceTest {
         aluno1.setNome("Larissa");
         aluno1.setCurso("Engenharia");
         aluno1.setMedia(8.5f);
-        aluno1.setRa(new AlunoRA("12345"));
+        aluno1.setRa(new AlunoRA("123456"));
 
         aluno2 = new Aluno();
         aluno2.setNome("Carlos");
         aluno2.setCurso("Computação");
         aluno2.setMedia(7.0f);
-        aluno2.setRa(new AlunoRA("67890"));
+        aluno2.setRa(new AlunoRA("678690"));
     }
 
     @Test
@@ -56,7 +56,7 @@ class AlunoServiceTest {
     @Test
     void deveBuscarAlunoPorIdExistente() {
         alunoService.saveAluno(aluno1);
-        aluno1.setRa(new AlunoRA("RA123"));
+        aluno1.setRa(new AlunoRA("561235"));
         aluno1.setCurso("Engenharia");
         aluno1.setTopicosCriados(1);
         aluno1.setMedia(8.0f);
@@ -73,7 +73,7 @@ class AlunoServiceTest {
         Aluno alunoAtualizado = new Aluno();
         alunoAtualizado.setCurso("Engenharia Elétrica");
         alunoAtualizado.setMedia(9.0f);
-        alunoAtualizado.setRa(new AlunoRA("RA999"));
+        alunoAtualizado.setRa(new AlunoRA("999999"));
 
         Aluno resultado = alunoService.updateAluno(aluno1.getId(), alunoAtualizado);
         assertNull(resultado);
