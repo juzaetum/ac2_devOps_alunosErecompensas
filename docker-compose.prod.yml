@@ -11,14 +11,11 @@ services:
 
   api:
     image: juzaetum/ac2_devops_alunoserecompensas:latest
-    depends_on:
-      - database
+    networks:
+      - default  # Certifique-se de que está usando a rede adequada
     environment:
       DB_HOST: database
     ports:
       - "8585:8080"
-    networks:
-      - default
-
 volumes:
   db-volume:
