@@ -186,16 +186,20 @@ class AlunoServiceTest {
     }
     
     @Test
-    void deveAtualizarAlunoExistenteComNovoRaValido() {
+    void deveAtualizarAlunoExistenteComNovoRaValido() throws Exception {
         alunoService.saveAluno(aluno1);
+
+        // simula que o aluno salvo tem id = 1L
+        var field = Aluno.class.getDeclaredField("id");
+        field.setAccessible(true);
+        field.set(aluno1, 1L);
 
         Aluno atualizado = new Aluno();
         atualizado.setCurso("Engenharia Civil");
         atualizado.setMedia(9.2f);
         atualizado.setRa(new AlunoRA("999999"));
 
-        // força um id igual (simulando aluno encontrado)
-        Aluno resultado = alunoService.updateAluno(aluno1.getId(), atualizado);
+        Aluno resultado = alunoService.updateAluno(1L, atualizado);
 
         assertNotNull(resultado);
         assertEquals("999999", resultado.getRa().toString());
@@ -204,15 +208,20 @@ class AlunoServiceTest {
     }
 
     @Test
-    void deveAtualizarAlunoExistenteComRaNuloMantendoPadrao() {
+    void deveAtualizarAlunoExistenteComRaNuloMantendoPadrao() throws Exception {
         alunoService.saveAluno(aluno1);
+
+        // força o id via reflection
+        var field = Aluno.class.getDeclaredField("id");
+        field.setAccessible(true);
+        field.set(aluno1, 1L);
 
         Aluno atualizado = new Aluno();
         atualizado.setCurso("Engenharia Mecânica");
         atualizado.setMedia(8.7f);
         atualizado.setRa(null); // força uso de RA padrão
 
-        Aluno resultado = alunoService.updateAluno(aluno1.getId(), atualizado);
+        Aluno resultado = alunoService.updateAluno(1L, atualizado);
 
         assertNotNull(resultado);
         assertEquals("123456", resultado.getRa().toString());
