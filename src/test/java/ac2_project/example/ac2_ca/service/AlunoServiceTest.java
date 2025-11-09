@@ -36,6 +36,8 @@ class AlunoServiceTest {
         aluno2.setRa(new AlunoRA("678690"));
     }
 
+    // -------------------- TESTES POSITIVOS --------------------
+
     @Test
     void deveSalvarAluno() {
         Aluno salvo = alunoService.saveAluno(aluno1);
@@ -48,7 +50,6 @@ class AlunoServiceTest {
     void deveListarTodosOsAlunos() {
         alunoService.saveAluno(aluno1);
         alunoService.saveAluno(aluno2);
-
         List<Aluno> lista = alunoService.listarTodos();
         assertEquals(2, lista.size());
     }
@@ -56,27 +57,25 @@ class AlunoServiceTest {
     @Test
     void deveBuscarAlunoPorIdExistente() {
         alunoService.saveAluno(aluno1);
-        aluno1.setRa(new AlunoRA("561235"));
-        aluno1.setCurso("Engenharia");
-        aluno1.setTopicosCriados(1);
-        aluno1.setMedia(8.0f);
-
-        Aluno resultado = alunoService.getAlunoById(aluno1.getId());
-        assertNull(resultado); 
+        Aluno resultado = alunoService.getAlunoById(1L);
+        assertNotNull(resultado);
+        assertEquals("Larissa", resultado.getNome());
     }
 
     @Test
     void deveAtualizarAlunoExistente() {
         alunoService.saveAluno(aluno1);
-        aluno1.setMedia(8.0f);
+        Aluno atualizado = new Aluno();
+        atualizado.setCurso("Engenharia Elétrica");
+        atualizado.setMedia(9.0f);
+        atualizado.setRa(new AlunoRA("999999"));
 
-        Aluno alunoAtualizado = new Aluno();
-        alunoAtualizado.setCurso("Engenharia Elétrica");
-        alunoAtualizado.setMedia(9.0f);
-        alunoAtualizado.setRa(new AlunoRA("999999"));
+        Aluno resultado = alunoService.updateAluno(1L, atualizado);
 
-        Aluno resultado = alunoService.updateAluno(aluno1.getId(), alunoAtualizado);
-        assertNull(resultado);
+        assertNotNull(resultado);
+        assertEquals("Engenharia Elétrica", resultado.getCurso());
+        assertEquals(9.0f, resultado.getMedia());
+        assertEquals("999999", resultado.getRa().toString());
     }
 
     @Test
@@ -84,14 +83,92 @@ class AlunoServiceTest {
         alunoService.saveAluno(aluno1);
         alunoService.saveAluno(aluno2);
 
-        alunoService.deleteAluno(aluno1.getId());
+        alunoService.deleteAluno(1L);
 
-        assertEquals(2, alunoService.getAllAlunos().size(),
-                "Nenhum aluno deve ser removido pois id é null");
+        List<Aluno> lista = alunoService.getAllAlunos();
+        assertEquals(1, lista.size());
+        assertEquals("Carlos", lista.get(0).getNome());
     }
 
     @Test
     void deveRetornarListaVaziaInicialmente() {
         assertTrue(alunoService.getAllAlunos().isEmpty());
+    }
+
+    // -------------------- TESTES NEGATIVOS / COBERTURA EXTRA --------------------
+
+    @Test
+    void deveRetornarNullAoBuscarComIdNulo() {
+        Aluno resultado = alunoService.getAlunoById(null);
+        assertNull(resultado);
+    }
+
+    @Test
+    void deveRetornarNullAoAtualizarComIdNulo() {
+        alunoService.saveAluno(aluno1);
+        Aluno atualizado = new Aluno();
+        atualizado.setRa(new AlunoRA("111111"));
+
+        Aluno resultado = alunoService.updateAluno(null, atualizado);
+        assertNull(resultado);
+    }
+
+    @Test
+    void deveRetornarNullAoAtualizarComAlunoNulo() {
+        alunoService.saveAluno(aluno1);
+        Aluno resultado = alunoService.updateAluno(1L, null);
+        assertNull(resultado);
+    }
+
+    @Test
+    void deveRetornarNullAoAtualizarAlunoInexistente() {
+        alunoService.saveAluno(aluno1);
+        Aluno novo = new Aluno();
+        novo.setRa(new AlunoRA("888888"));
+
+        Aluno resultado = alunoService.updateAluno(99L, novo);
+        assertNull(resultado);
+    }
+
+    @Test
+    void deveLidarComRemocaoComIdNuloSemErro() {
+        alunoService.saveAluno(aluno1);
+        alunoService.deleteAluno(null);
+        assertEquals(1, alunoService.getAllAlunos().size());
+    }
+
+    @Test
+    void deveLancarExcecaoAoSalvarAlunoNulo() {
+        Exception ex = assertThrows(IllegalArgumentException.class, () -> alunoService.saveAluno(null));
+        assertEquals("Aluno não pode ser nulo", ex.getMessage());
+    }
+
+    @Test
+    void deveSubstituirRaInvalidoPorPadraoDuranteValidacao() {
+        Aluno aluno = new Aluno();
+        aluno.setRa(new AlunoRA("000000"));
+
+        aluno.setNome("Teste");
+        aluno.setCurso("ADS");
+        aluno.setMedia(6.5f);
+
+        // forçar um RA inválido simulando o retorno do toString()
+        aluno.setRa(new AlunoRA("12")); // menos de 6 dígitos
+
+        Aluno salvo = alunoService.saveAluno(aluno);
+        assertEquals("123456", salvo.getRa().toString());
+    }
+
+    @Test
+    void deveDefinirRaPadraoQuandoRaForNulo() {
+        Aluno aluno = new Aluno();
+        aluno.setNome("Sem RA");
+        aluno.setCurso("Computação");
+        aluno.setMedia(5.0f);
+        aluno.setRa(null);
+
+        alunoService.saveAluno(aluno);
+
+        assertEquals("123456", aluno.getRa().toString());
     }
 }
