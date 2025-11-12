@@ -1,37 +1,52 @@
 package ac2_project.example.ac2_ca.dto.test;
 
+import ac2_project.example.ac2_ca.dto.RecompensaDTO;
+import ac2_project.example.ac2_ca.entity.Recompensa;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import ac2_project.example.ac2_ca.dto.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RecompensaDTOTest {
 
     @Test
-    void deveCriarRecompensaDTOComBuilder() {
-        RecompensaDTO recompensa = RecompensaDTO.builder()
-                .tipo("Cursos Extras")
-                .descricao("Ganhou curso de Java Avançado")
+    @DisplayName("Deve criar e acessar atributos de RecompensaDTO via construtor e getters/setters")
+    void testConstrutorEGetters() {
+        RecompensaDTO dto = new RecompensaDTO("Financeira", "Recompensa em dinheiro");
+
+        assertThat(dto.getTipo()).isEqualTo("Financeira");
+        assertThat(dto.getDescricao()).isEqualTo("Recompensa em dinheiro");
+
+        dto.setTipo("Acadêmica");
+        dto.setDescricao("Reconhecimento de desempenho");
+
+        assertThat(dto.getTipo()).isEqualTo("Acadêmica");
+        assertThat(dto.getDescricao()).isEqualTo("Reconhecimento de desempenho");
+    }
+
+    @Test
+    @DisplayName("Deve criar RecompensaDTO via builder do Lombok")
+    void testBuilder() {
+        RecompensaDTO dto = RecompensaDTO.builder()
+                .tipo("Cultural")
+                .descricao("Participação em evento")
                 .build();
 
-        assertEquals("Cursos Extras", recompensa.getTipo());
-        assertEquals("Ganhou curso de Java Avançado", recompensa.getDescricao());
+        assertThat(dto).isNotNull();
+        assertThat(dto.getTipo()).isEqualTo("Cultural");
+        assertThat(dto.getDescricao()).isEqualTo("Participação em evento");
     }
 
     @Test
-    void deveTestarSettersEGetters() {
-        RecompensaDTO recompensa = new RecompensaDTO();
-        recompensa.setTipo("Medalha");
-        recompensa.setDescricao("Conquista por 10 tópicos criados");
+    @DisplayName("Deve lançar exceção quando fromEntity for chamado (não implementado)")
+    void testFromEntityThrowsException() {
+        Recompensa recompensa = new Recompensa(100f, "Melhor Aluno", "Engenharia");
 
-        assertEquals("Medalha", recompensa.getTipo());
-        assertEquals("Conquista por 10 tópicos criados", recompensa.getDescricao());
-    }
+        UnsupportedOperationException exception = assertThrows(
+                UnsupportedOperationException.class,
+                () -> RecompensaDTO.fromEntity(recompensa));
 
-    @Test
-    void deveGerarToStringENaoSerNulo() {
-        RecompensaDTO recompensa = new RecompensaDTO();
-        assertNotNull(recompensa.toString());
+        assertThat(exception.getMessage()).contains("Unimplemented method 'fromEntity'");
     }
 }
