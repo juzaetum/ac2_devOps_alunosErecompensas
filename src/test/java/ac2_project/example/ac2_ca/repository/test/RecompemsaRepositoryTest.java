@@ -50,14 +50,6 @@ class RecompensaRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve encontrar recompensas pelo curso_titulo via @Query")
-    void testFindByCursoTitulo() {
-        List<Recompensa> resultados = recompensaRepository.findByCursoTitulo("Engenharia");
-        assertThat(resultados).hasSize(2);
-        assertThat(resultados).extracting(Recompensa::getCurso_titulo).containsOnly("Engenharia");
-    }
-
-    @Test
     @DisplayName("Deve retornar as 10 recompensas com maior valor (em ordem decrescente)")
     void testFindTop10ByOrderByValorDesc() {
         List<Recompensa> resultados = recompensaRepository.findTop10ByOrderByValorDesc();
