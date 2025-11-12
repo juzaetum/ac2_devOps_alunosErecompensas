@@ -1,85 +1,127 @@
 package ac2_project.example.ac2_ca.service;
 
-import ac2_project.example.ac2_ca.entity.Aluno;
-import ac2_project.example.ac2_ca.entity.AlunoRA;
+import ac2_project.example.ac2_ca.entity.Recompensa;
+import ac2_project.example.ac2_ca.repository.Recompensa_Repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 class RecompensaServiceTest {
 
+    @Mock
+    private Recompensa_Repository recompensaRepository;
+
+    @InjectMocks
     private RecompensaService recompensaService;
-    private Aluno aluno;
+
+    private Recompensa r1;
+    private Recompensa r2;
 
     @BeforeEach
-    void setUp() {
-        recompensaService = new RecompensaService();
-        aluno = new Aluno(new AlunoRA("123456"), "Engenharia", 8.5f);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+        r1 = new Recompensa(1L, 200f, "Bolsa", "Engenharia");
+        r2 = new Recompensa(2L, 100f, "Certificado", "Computação");
+    }
+
+    // GET ALL
+    @Test
+    void deveRetornarTodasAsRecompensas() {
+        when(recompensaRepository.findAll()).thenReturn(Arrays.asList(r1, r2));
+
+        List<Recompensa> resultado = recompensaService.getAllRecompensas();
+
+        assertThat(resultado).hasSize(2);
+        verify(recompensaRepository, times(1)).findAll();
+    }
+
+    // GET BY ID
+    @Test
+    void deveRetornarRecompensaPorId() {
+        when(recompensaRepository.findById(1L)).thenReturn(Optional.of(r1));
+
+        Optional<Recompensa> resultado = recompensaService.getRecompensaById(1L);
+
+        assertThat(resultado).isPresent();
+        assertThat(resultado.get().getNome()).isEqualTo("Bolsa");
+        verify(recompensaRepository).findById(1L);
     }
 
     @Test
-    void naoDeveConcederRecompensaQuandoMediaForMenorOuIgualASete() {
-        aluno.setMedia(6.5f);
-        aluno.setTopicosCriados(10);
-        aluno.setComentariosFeitos(10);
+    void deveRetornarVazioSeIdNaoExistir() {
+        when(recompensaRepository.findById(99L)).thenReturn(Optional.empty());
 
-        recompensaService.calcularRecompensa(aluno);
+        Optional<Recompensa> resultado = recompensaService.getRecompensaById(99L);
 
-        assertEquals(0, aluno.getCursosExtrasRecebidos(),
-                "Não deve conceder recompensa se a média for <= 7.0");
+        assertThat(resultado).isEmpty();
+    }
+
+    // CREATE
+    @Test
+    void deveCriarRecompensa() {
+        when(recompensaRepository.save(any(Recompensa.class))).thenReturn(r1);
+
+        Recompensa criada = recompensaService.createRecompensa(r1);
+
+        assertThat(criada.getNome()).isEqualTo("Bolsa");
+        verify(recompensaRepository).save(r1);
+    }
+
+    // UPDATE
+    @Test
+    void deveAtualizarRecompensaExistente() {
+        Recompensa nova = new Recompensa(null, 500f, "Nova Bolsa", "Engenharia");
+
+        when(recompensaRepository.findById(1L)).thenReturn(Optional.of(r1));
+        when(recompensaRepository.save(any(Recompensa.class))).thenReturn(r1);
+
+        Optional<Recompensa> atualizada = recompensaService.updateRecompensa(1L, nova);
+
+        assertThat(atualizada).isPresent();
+        assertThat(atualizada.get().getValor()).isEqualTo(500f);
+        assertThat(atualizada.get().getNome()).isEqualTo("Nova Bolsa");
+
+        verify(recompensaRepository).findById(1L);
+        verify(recompensaRepository).save(any(Recompensa.class));
     }
 
     @Test
-    void deveConcederRecompensaQuandoMediaMaiorQueSete() {
-        aluno.setMedia(8.0f);
-        aluno.setTopicosCriados(5);
-        aluno.setComentariosFeitos(0);
+    void deveRetornarVazioAoAtualizarRecompensaInexistente() {
+        when(recompensaRepository.findById(99L)).thenReturn(Optional.empty());
 
-        recompensaService.calcularRecompensa(aluno);
+        Optional<Recompensa> resultado = recompensaService.updateRecompensa(99L, r1);
 
-        assertEquals(1, aluno.getCursosExtrasRecebidos(),
-                "Deve conceder 1 curso extra a cada 5 interações com média > 7");
+        assertThat(resultado).isEmpty();
+        verify(recompensaRepository, never()).save(any());
+    }
+
+    // DELETE
+    @Test
+    void deveDeletarRecompensaSeExistir() {
+        when(recompensaRepository.existsById(1L)).thenReturn(true);
+
+        boolean resultado = recompensaService.deleteRecompensa(1L);
+
+        assertThat(resultado).isTrue();
+        verify(recompensaRepository).deleteById(1L);
     }
 
     @Test
-    void deveConcederMultiplasRecompensasParaMuitasInteracoes() {
-        aluno.setMedia(9.0f);
-        aluno.setTopicosCriados(12);
-        aluno.setComentariosFeitos(8); // total 20 interações
+    void naoDeveDeletarSeNaoExistir() {
+        when(recompensaRepository.existsById(99L)).thenReturn(false);
 
-        recompensaService.calcularRecompensa(aluno);
+        boolean resultado = recompensaService.deleteRecompensa(99L);
 
-        assertEquals(4, aluno.getCursosExtrasRecebidos(),
-                "Deve conceder 1 curso extra a cada 5 interações com média > 7");
-    }
-
-    @Test
-    void naoDeveReduzirRecompensasQuandoInteracoesDiminuem() {
-        aluno.setMedia(9.0f);
-        aluno.setTopicosCriados(10);
-        aluno.setComentariosFeitos(5);
-        recompensaService.calcularRecompensa(aluno); // 15 interações → 3 cursos
-
-        aluno.setTopicosCriados(2);
-        aluno.setComentariosFeitos(1);
-        recompensaService.calcularRecompensa(aluno); // 3 interações → 0 cursos novos
-
-        assertEquals(3, aluno.getCursosExtrasRecebidos(),
-                "Recompensas não devem ser reduzidas se as interações diminuírem");
-    }
-
-    @Test
-    void deveZerarRecompensasQuandoMediaForAbaixadaParaMenorOuIgualASete() {
-        aluno.setMedia(8.5f);
-        aluno.setTopicosCriados(10);
-        aluno.setComentariosFeitos(5);
-        recompensaService.calcularRecompensa(aluno);
-
-        aluno.setMedia(6.0f);
-        recompensaService.calcularRecompensa(aluno);
-
-        assertEquals(0, aluno.getCursosExtrasRecebidos(),
-                "Deve remover recompensas se a média cair para <= 7.0");
+        assertThat(resultado).isFalse();
+        verify(recompensaRepository, never()).deleteById(any());
     }
 }

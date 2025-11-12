@@ -58,10 +58,6 @@ public class AlunoService {
         return new ArrayList<>(alunos);
     }
 
-    /**
-     * Valida se o RA contém exatamente 6 dígitos numéricos.
-     * Se o RA for nulo ou não corresponder ao regex, define o RA para "123456".
-     */
     private void validarRa(Aluno aluno) {
         if (aluno == null)
             throw new IllegalArgumentException("Aluno inválido: nulo");
