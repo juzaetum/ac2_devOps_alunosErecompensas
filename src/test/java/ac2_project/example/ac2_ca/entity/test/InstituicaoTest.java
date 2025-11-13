@@ -65,7 +65,7 @@ class InstituicaoTest {
 
     @Test
     void deveAdicionarERemoverAluno() {
-        Aluno aluno = new Aluno("Juliane", "juliane@email.com");
+        Aluno aluno = new Aluno("Pedro", "pedro@email.com");
         instituicao.adicionarAluno(aluno);
         assertEquals(1, instituicao.getAlunos().size());
         assertTrue(instituicao.getAlunos().contains(aluno));

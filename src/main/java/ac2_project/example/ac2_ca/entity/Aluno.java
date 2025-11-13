@@ -3,6 +3,8 @@ package ac2_project.example.ac2_ca.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -58,7 +60,7 @@ public class Aluno {
         this.media = media;
         verificarRecompensa();
     }
-    
+
     public Aluno(String nome, String email) {
         this.nome = nome;
         this.email = email;
@@ -90,72 +92,8 @@ public class Aluno {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public AlunoRA getRa() {
-        return ra;
-    }
-
-    public void setRa(AlunoRA ra) {
-        this.ra = ra;
-    }
-
-    public String getCurso() {
-        return curso;
-    }
-
-    public void setCurso(String curso) {
-        this.curso = curso;
-    }
-
-    public float getMedia() {
-        return media;
-    }
-
     public void setMedia(float media) {
         this.media = media;
         verificarRecompensa();
-    }
-
-    public int getTopicosCriados() {
-        return topicosCriados;
-    }
-
-    public void setTopicosCriados(int topicosCriados) {
-        this.topicosCriados = topicosCriados;
-    }
-
-    public int getComentariosFeitos() {
-        return comentariosFeitos;
-    }
-
-    public void setComentariosFeitos(int comentariosFeitos) {
-        this.comentariosFeitos = comentariosFeitos;
-    }
-
-    public int getCursosExtrasRecebidos() {
-        return cursosExtrasRecebidos;
-    }
-
-    public void setCursosExtrasRecebidos(int cursosExtrasRecebidos) {
-        this.cursosExtrasRecebidos = cursosExtrasRecebidos;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }

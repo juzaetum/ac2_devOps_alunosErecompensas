@@ -3,6 +3,8 @@ package ac2_project.example.ac2_ca.entity;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @Embeddable
 public class AlunoRA {
@@ -16,10 +18,7 @@ public class AlunoRA {
         this.numero = numero;
     }
 
-    public String getNumero() {
-        return numero;
-    }
-
+    
     public void setNumero(String numero) {
         if (!numero.matches("\\d{6}")) {
             throw new IllegalArgumentException("O RA deve conter exatamente 6 números.");

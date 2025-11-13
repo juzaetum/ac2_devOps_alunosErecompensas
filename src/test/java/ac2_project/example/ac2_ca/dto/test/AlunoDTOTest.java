@@ -18,7 +18,7 @@ class AlunoDTOTest {
 
         AlunoDTO aluno = AlunoDTO.builder()
                 .id(1L)
-                .nome("Juliane Zaetum")
+                .nome("Eduardo")
                 .ra("123456")
                 .curso("Engenharia de Computação")
                 .rendimento(8.5)
@@ -26,7 +26,7 @@ class AlunoDTOTest {
                 .recompensas(List.of(recompensa))
                 .build();
 
-        assertEquals("Juliane Zaetum", aluno.getNome());
+        assertEquals("Eduardo", aluno.getNome());
         assertEquals("123456", aluno.getRa());
         assertEquals(8.5, aluno.getRendimento());
         assertEquals(1, aluno.getRecompensas().size());
@@ -36,10 +36,10 @@ class AlunoDTOTest {
     @Test
     void devePermitirSettersEGetters() {
         AlunoDTO aluno = new AlunoDTO();
-        aluno.setNome("Juliane");
+        aluno.setNome("Eduardo");
         aluno.setCurso("Engenharia");
 
-        assertEquals("Juliane", aluno.getNome());
+        assertEquals("Eduardo", aluno.getNome());
         assertEquals("Engenharia", aluno.getCurso());
     }
 

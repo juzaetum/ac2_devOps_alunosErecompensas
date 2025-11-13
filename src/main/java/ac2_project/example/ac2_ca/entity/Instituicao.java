@@ -1,9 +1,16 @@
 package ac2_project.example.ac2_ca.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "tb_instituicao")
 public class Instituicao {
@@ -62,50 +69,5 @@ public class Instituicao {
 
     public void desativar() {
         this.ativa = false;
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public InstituicaoCNPJ getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(InstituicaoCNPJ cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public boolean isAtiva() {
-        return ativa;
-    }
-
-    public void setAtiva(boolean ativa) {
-        this.ativa = ativa;
-    }
-
-    public List<Curso> getCursos() {
-        return cursos;
-    }
-
-    public List<Aluno> getAlunos() {
-        return alunos;
     }
 }

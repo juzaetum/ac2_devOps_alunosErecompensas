@@ -1,24 +1,23 @@
 package ac2_project.example.ac2_ca.entity;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Embeddable
 public class InstituicaoCNPJ {
 
     private String numero;
-
-    public InstituicaoCNPJ() {
-    }
 
     public InstituicaoCNPJ(String numero) {
         if (!numero.matches("\\d{14}")) {
             throw new IllegalArgumentException("O CNPJ deve conter exatamente 14 dígitos numéricos.");
         }
         this.numero = numero;
-    }
-
-    public String getNumero() {
-        return numero;
     }
 
     public void setNumero(String numero) {
