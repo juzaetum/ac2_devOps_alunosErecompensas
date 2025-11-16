@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class AlunoRepositoryTest {
-
     @Autowired
     private AlunoRepository repository;
 

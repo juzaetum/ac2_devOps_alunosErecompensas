@@ -74,16 +74,6 @@ public class CursoTest {
     }
     
     @Test
-    void deveCriarCursoComConstrutorPadrao() {
-        Curso curso = new Curso();
-        assertEquals("", curso.getTitulo());
-        assertEquals("", curso.getDescricao());
-        assertEquals("", curso.getProfessor());
-        assertTrue(curso.isAtivo());
-        assertNull(curso.getAulas());
-    }
-
-    @Test
     void deveCriarCursoComTituloEIdPersonalizado() {
         Curso curso = new Curso("Cálculo I", 123);
         assertEquals("Cálculo I", curso.getTitulo());

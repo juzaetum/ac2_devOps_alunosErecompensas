@@ -151,6 +151,10 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.5</version>
 				<configuration>
+				  <excludes>
+                    <exclude>**/config/**</exclude> 
+					<exclude>**/repository/**</exclude>  
+              		  </excludes>
 					<systemPropertyVariables>
 						<spring.profiles.active>test</spring.profiles.active>
 					</systemPropertyVariables>

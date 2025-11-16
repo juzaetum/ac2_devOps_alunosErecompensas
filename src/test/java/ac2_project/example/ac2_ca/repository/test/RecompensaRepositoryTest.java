@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.util.List;
 
@@ -13,9 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class RecompensaRepositoryTest {
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Autowired
     private Recompensa_Repository repository;
+
 
     private Recompensa r1, r2, r3;
 
@@ -25,9 +29,9 @@ class RecompensaRepositoryTest {
         r2 = new Recompensa("Medalha Prata", 70f, "Python");
         r3 = new Recompensa("Medalha Bronze", 50f, "Java");
 
-        repository.save(r1);
-        repository.save(r2);
-        repository.save(r3);
+        entityManager.persist(r1);
+        entityManager.persist(r2);
+        entityManager.persist(r3);
     }
 
     @Test
