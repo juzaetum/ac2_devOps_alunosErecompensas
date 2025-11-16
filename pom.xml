@@ -125,7 +125,8 @@
 				</executions>
 				  <configuration>
                 <excludes>
-                    <exclude>**/config/**</exclude>  
+                    <exclude>**/config/**</exclude> 
+					<exclude>**/repository/**</exclude>  
                 </excludes>
             </configuration>
 			</plugin>
