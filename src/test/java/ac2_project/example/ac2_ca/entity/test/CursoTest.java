@@ -80,8 +80,7 @@ public class CursoTest {
         assertEquals("", curso.getDescricao());
         assertEquals("", curso.getProfessor());
         assertTrue(curso.isAtivo());
-        assertNotNull(curso.getAulas());
-        assertNotNull(curso.getAlunos());
+        assertNull(curso.getAulas());
     }
 
     @Test

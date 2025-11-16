@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "tb_recompensa")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
 public class Recompensa {
 
     @Id
@@ -25,7 +23,23 @@ public class Recompensa {
     private String nome;
     private String curso_titulo;
 
+    // Construtor usado pelo teste: (valor, nome, curso)
     public Recompensa(float valor, String nome, String curso_titulo) {
+        this.valor = valor;
+        this.nome = nome;
+        this.curso_titulo = curso_titulo;
+    }
+
+    // Construtor alternativo usado pelo outro teste: (nome, valor, curso)
+    public Recompensa(String nome, float valor, String curso_titulo) {
+        this.valor = valor;
+        this.nome = nome;
+        this.curso_titulo = curso_titulo;
+    }
+
+    // Construtor com id usado nos testes de controller
+    public Recompensa(Long id, float valor, String nome, String curso_titulo) {
+        this.id = id;
         this.valor = valor;
         this.nome = nome;
         this.curso_titulo = curso_titulo;

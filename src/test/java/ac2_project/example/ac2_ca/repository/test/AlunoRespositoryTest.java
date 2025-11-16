@@ -1,92 +1,68 @@
 package ac2_project.example.ac2_ca.repository.test;
 
-import ac2_project.example.ac2_ca.entity.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import ac2_project.example.ac2_ca.entity.Aluno;
+import ac2_project.example.ac2_ca.entity.AlunoRA;
+import ac2_project.example.ac2_ca.repository.AlunoRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-class CursoAulaTest {
+@DataJpaTest
+class AlunoRepositoryTest {
 
-    private Curso curso;
-    private CursoAula aula1;
-    private CursoAula aula2;
+    @Autowired
+    private AlunoRepository repository;
+
+    private Aluno aluno;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        curso = new Curso();
-        curso.setTitulo("Engenharia de Computação");
-
-        aula1 = new CursoAula("Introdução a Microcontroladores", 90, "Conceitos básicos e aplicações práticas.", true);
-        aula2 = new CursoAula("Arquitetura de Computadores", 120, "Funcionamento interno e instruções.", false);
+    void setup() {
+        aluno = new Aluno(new AlunoRA("123456"));
+        aluno.setNome("Juliane");
+        repository.save(aluno);
     }
 
     @Test
-    @DisplayName("Deve adicionar aulas ao curso corretamente")
-    void deveAdicionarAulasAoCurso() {
-        curso.adicionarAula(aula1);
-        curso.adicionarAula(aula2);
+    void testSaveAluno() {
+        Aluno novo = new Aluno(new AlunoRA("654321"));
+        novo.setNome("Marcos");
+        Aluno salvo = repository.save(novo);
 
-        List<CursoAula> aulas = curso.getAulas();
-
-        assertThat(aulas)
-                .isNotEmpty()
-                .hasSize(2)
-                .containsExactly(aula1, aula2);
-    }
-
-
-    @Test
-    @DisplayName("Deve permitir remover uma aula do curso")
-    void deveRemoverAulaDoCurso() {
-        curso.adicionarAula(aula1);
-        curso.adicionarAula(aula2);
-
-        curso.removerAula(aula1);
-
-        assertThat(curso.getAulas())
-                .hasSize(1)
-                .containsExactly(aula2);
+        assertNotNull(salvo.getId());
+        assertEquals("Marcos", salvo.getNome());
+        assertEquals("654321", salvo.getRa().getNumero());
     }
 
     @Test
-    @DisplayName("Deve retornar corretamente o nome e quantidade de aulas do curso")
-    void deveRetornarNomeEQuantidadeDeAulas() {
-        curso.adicionarAula(aula1);
-        curso.adicionarAula(aula2);
+    void testFindById() {
+        Optional<Aluno> result = repository.findById(aluno.getId());
 
-        String resumo = curso.getTitulo() + " - " + curso.getAulas().size() + " aulas";
-
-        assertThat(resumo)
-                .isEqualTo("Engenharia de Computação - 2 aulas");
+        assertTrue(result.isPresent());
+        assertEquals("Marcos", result.get().getNome());
     }
 
     @Test
-    @DisplayName("Deve validar getters e setters de Aula")
-    void deveValidarGettersESettersDeAula() {
-        CursoAula aula = new CursoAula("Eletrônica Digital", 80, "Portas lógicas e circuitos combinacionais", true);
-    
-
-        assertThat(aula.getTitulo()).isEqualTo("Eletrônica Digital");
-        assertThat(aula.getConteudoResumo()).contains("Portas lógicas");
-        assertThat(aula.getDuracaoMinutos()).isEqualTo(80);
+    void testFindAll() {
+        assertEquals(1, repository.findAll().size());
     }
 
     @Test
-    @DisplayName("Deve simular comportamento com Mockito")
-    void deveUsarMockitoParaVerificarChamadaDeMetodo() {
-        Curso mockCurso = mock(Curso.class);
-        when(mockCurso.getTitulo()).thenReturn("Curso Mockado");
+    void testUpdateAluno() {
+        aluno.setNome("Teste Atualizada");
+        Aluno atualizado = repository.save(aluno);
 
-        String titulo = mockCurso.getTitulo();
+        assertEquals("Teste Atualizada", atualizado.getNome());
+    }
 
-        assertThat(titulo).isEqualTo("Curso Mockado");
-        verify(mockCurso, times(1)).getTitulo();
+    @Test
+    void testDeleteAluno() {
+        repository.deleteById(aluno.getId());
+
+        assertFalse(repository.findById(aluno.getId()).isPresent());
     }
 }
