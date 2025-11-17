@@ -30,14 +30,14 @@ public class Recompensa {
         this.curso_titulo = curso_titulo;
     }
 
-    // Construtor alternativo usado pelo outro teste: (nome, valor, curso)
+    
     public Recompensa(String nome, float valor, String curso_titulo) {
         this.valor = valor;
         this.nome = nome;
         this.curso_titulo = curso_titulo;
     }
 
-    // Construtor com id usado nos testes de controller
+    
     public Recompensa(Long id, float valor, String nome, String curso_titulo) {
         this.id = id;
         this.valor = valor;
