@@ -10,7 +10,7 @@ services:
       - db-volume:/var/lib/postgresql/data
 
   api:
-    image: juzaetum/ac2_devops_alunoserecompensas:latest
+    image: andprof/ac2_ca:latest
     depends_on:
       - database
     environment: 
